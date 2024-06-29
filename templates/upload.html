@@ -141,25 +141,31 @@ pasta.file_embeddable() && !pasta.encrypt_client %}
 
 {% if pasta.extension == "auto" && !pasta.encrypt_client %}
 <script>
-  const link = document.createElement("link");
-  link.rel = "stylesheet";
-  link.href = "{{ args.public_path_as_str()}}/static/highlight/highlight.min.css";
-  document.head.appendChild(link);
+  (() => {
+    const link = document.createElement("link");
+    link.rel = "stylesheet";
+    link.href = "{{ args.public_path_as_str()}}/static/highlight/highlight.min.css";
+    document.head.appendChild(link);
+  })();
 </script>
 <script type="text/javascript" src="{{ args.public_path_as_str() }}/static/highlight/highlight.min.js" defer></script>
 {% endif %}
 
 <script>
-  const style = document.createElement("style");
-  style.innerHTML = "code-line{counter-increment:line;text-align:right;float:left;clear:left}code-line::before{content:counter(line);display:inline-block;padding-left:auto;margin-left:auto;text-align:left;width:1.8rem;border-right:1px solid #d3d3d3;color:grey;margin-right:.4rem;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}#code{min-height:2rem}#embed{background-color:var(--background-alt);border-radius:6px;width:fit-content;margin:1rem auto;max-height:480px;display:flex;justify-content:center;align-items:center}.download-button{margin-left:1rem;font-size:small;padding:4px .8rem;cursor:pointer}.code-container{position:relative}.hidden{display:none}.small-button{font-size:small;padding:4px .8rem;cursor:pointer}";
-  document.head.appendChild(style);
+  (() => {
+    const style = document.createElement("style");
+    style.innerHTML = "code-line{counter-increment:line;text-align:right;float:left;clear:left}code-line::before{content:counter(line);display:inline-block;padding-left:auto;margin-left:auto;text-align:left;width:1.8rem;border-right:1px solid #d3d3d3;color:grey;margin-right:.4rem;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}#code{min-height:2rem}#embed{background-color:var(--background-alt);border-radius:6px;width:fit-content;margin:1rem auto;max-height:480px;display:flex;justify-content:center;align-items:center}.download-button{margin-left:1rem;font-size:small;padding:4px .8rem;cursor:pointer}.code-container{position:relative}.hidden{display:none}.small-button{font-size:small;padding:4px .8rem;cursor:pointer}";
+    document.head.appendChild(style);
+  })();
 </script>
 
 {% if !args.pure_html %}
 <script>
-  const style = document.createElement("style");
-  style.innerHTML = "#decryption{background-color:var(--background-alt);border-radius:6px;padding:10px;width:fit-content}";
-  document.head.appendChild(style);
+  (() => {
+    const style = document.createElement("style");
+    style.innerHTML = "#decryption{background-color:var(--background-alt);border-radius:6px;padding:10px;width:fit-content}";
+    document.head.appendChild(style);
+  })();
 </script>
 {% endif %}
 
