@@ -1,7 +1,9 @@
-# This is a fork of fork of https://github.com/szabodanika/microbin
+# MicroBin
 
-temp repo for merged fixes of Microbin until the original [maintainer be back](https://github.com/szabodanika/microbin/issues/249#issuecomment-1994209506) in the summer.
+MicroBin is a super tiny, feature rich, configurable, self-contained and self-hosted paste bin web application. It is very easy to set up and use, and will only require a few megabytes of memory and disk storage. It takes only a couple minutes to set it up, why not give it a try now?
 
-See the previous fork and closed pull requests to see what has been merged.
+## About this repo
 
-Pull the Docker image from `ghcr.io/zhaobenny/microbin:latest` (multiplatform)
+- This is a fork of [zhaobenny/microbin](https://github.com/zhaobenny/microbin)
+  - which is a fork of [kendofriendo/microbin](https://github.com/kendofriendo/microbin)
+    - which is a fork of [szabodanika/microbin](https://github.com/szabodanika/microbin)(origin)
