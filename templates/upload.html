@@ -71,7 +71,7 @@ justify-content: center; align-items: center;">
 <div class="code-container">
   <div style="clear: both;">
     {% if pasta.extension == "auto" || pasta.encrypt_client %}
-    <pre><code id="code">{{pasta.content_escaped()}}</code></pre>
+    <pre><code id="code" style="display: none;">{{pasta.content_escaped()}}</code></pre>
     {% else if args.highlightsyntax %}
     <pre><code id="code">{{pasta.content_syntax_highlighted()}}</code></pre>
     {% else %}
@@ -175,12 +175,13 @@ pasta.file_embeddable() && !pasta.encrypt_client %}
   const te = new TextEncoder();
 
   // {% if pasta.extension == "auto" && !pasta.encrypt_client %}
-  onload = (event) => {
+  document.addEventListener("DOMContentLoaded", function() {
     contentElement.innerHTML = content;
     hljs.highlightAll();
     contentElement.innerHTML =
       wrapStringInCodeLines(contentElement.innerHTML);
-  };
+    contentElement.style.display = "block";
+  });
   // {% endif %}
 
 
