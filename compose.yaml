@@ -1,6 +1,6 @@
 services:
   microbin:
-    image: ghcr.io/zhaobenny/microbin:latest
+    build: . # build by yourself
     restart: always
     ports:
       - "${MICROBIN_PORT}:8080"
