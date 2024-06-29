@@ -7,3 +7,5 @@ MicroBin is a super tiny, feature rich, configurable, self-contained and self-ho
 - This is a fork of [zhaobenny/microbin](https://github.com/zhaobenny/microbin)
   - which is a fork of [kendofriendo/microbin](https://github.com/kendofriendo/microbin)
     - which is a fork of [szabodanika/microbin](https://github.com/szabodanika/microbin)(origin)
+- I also made some slight fixes and features in this fork.
+- I haven't figured out how to use GitHub Actions for automatic builds (CI/CD) yet, so please build the Docker images manually for now.
