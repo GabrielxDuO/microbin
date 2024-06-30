@@ -1,8 +1,7 @@
 use crate::args::Args;
 use crate::endpoints::errors::ErrorTemplate;
-use crate::util::animalnumbers::to_u64;
 use crate::util::db::update;
-use crate::util::hashids::to_u64 as hashid_to_u64;
+use crate::util::hashids::alias_comparator;
 use crate::util::misc::{decrypt, encrypt, remove_expired};
 use crate::{AppState, Pasta, ARGS};
 use actix_multipart::Multipart;
@@ -24,16 +23,12 @@ struct EditTemplate<'a> {
 pub async fn get_edit(data: web::Data<AppState>, id: web::Path<String>) -> HttpResponse {
     let mut pastas = data.pastas.lock().unwrap();
 
-    let id = if ARGS.hash_ids {
-        hashid_to_u64(&id).unwrap_or(0)
-    } else {
-        to_u64(&id.into_inner()).unwrap_or(0)
-    };
+    let comparator = alias_comparator(id.as_str());
 
     remove_expired(&mut pastas);
 
     for pasta in pastas.iter() {
-        if pasta.id == id {
+        if comparator(pasta) {
             if !pasta.editable {
                 return HttpResponse::Found()
                     .append_header(("Location", format!("{}/", ARGS.public_path_as_str())))
@@ -76,16 +71,12 @@ pub async fn get_edit_with_status(
 
     let (id, status) = param.into_inner();
 
-    let intern_id = if ARGS.hash_ids {
-        hashid_to_u64(&id).unwrap_or(0)
-    } else {
-        to_u64(&id).unwrap_or(0)
-    };
+    let comparator = alias_comparator(id.as_str());
 
     remove_expired(&mut pastas);
 
     for pasta in pastas.iter() {
-        if pasta.id == intern_id {
+        if comparator(pasta) {
             if !pasta.editable {
                 return HttpResponse::Found()
                     .append_header(("Location", format!("{}/", ARGS.public_path_as_str())))
@@ -128,11 +119,7 @@ pub async fn post_edit_private(
     // get access to the pasta collection
     let mut pastas = data.pastas.lock().unwrap();
 
-    let id = if ARGS.hash_ids {
-        hashid_to_u64(&id).unwrap_or(0)
-    } else {
-        to_u64(&id.into_inner()).unwrap_or(0)
-    };
+    let comparator = alias_comparator(id.as_str());
 
     let mut password = String::from("");
 
@@ -151,7 +138,7 @@ pub async fn post_edit_private(
     let mut index: usize = 0;
     let mut found: bool = false;
     for (i, pasta) in pastas.iter().enumerate() {
-        if pasta.id == id {
+        if comparator(pasta) {
             index = i;
             found = true;
             break;
@@ -219,11 +206,7 @@ pub async fn post_submit_edit_private(
     // get access to the pasta collection
     let mut pastas = data.pastas.lock().unwrap();
 
-    let id = if ARGS.hash_ids {
-        hashid_to_u64(&id).unwrap_or(0)
-    } else {
-        to_u64(&id.into_inner()).unwrap_or(0)
-    };
+    let comparator = alias_comparator(id.as_str());
 
     let mut password = String::from("");
     let mut new_content = String::from("");
@@ -248,7 +231,7 @@ pub async fn post_submit_edit_private(
     let mut index: usize = 0;
     let mut found: bool = false;
     for (i, pasta) in pastas.iter().enumerate() {
-        if pasta.id == id {
+        if comparator(pasta) {
             index = i;
             found = true;
             break;
@@ -313,11 +296,7 @@ pub async fn post_edit(
     id: web::Path<String>,
     mut payload: Multipart,
 ) -> Result<HttpResponse, Error> {
-    let id = if ARGS.hash_ids {
-        hashid_to_u64(&id).unwrap_or(0)
-    } else {
-        to_u64(&id.into_inner()).unwrap_or(0)
-    };
+    let comparator = alias_comparator(id.as_str());
 
     let mut pastas = data.pastas.lock().unwrap();
 
@@ -340,7 +319,7 @@ pub async fn post_edit(
     }
 
     for (i, pasta) in pastas.iter().enumerate() {
-        if pasta.id == id {
+        if comparator(pasta) {
             if pasta.editable && !pasta.encrypt_client {
                 if pastas[i].readonly || pastas[i].encrypt_server {
                     if password != *"" {
