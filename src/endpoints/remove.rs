@@ -5,9 +5,8 @@ use futures::TryStreamExt;
 use crate::args::ARGS;
 use crate::endpoints::errors::ErrorTemplate;
 use crate::pasta::PastaFile;
-use crate::util::animalnumbers::to_u64;
 use crate::util::db::delete;
-use crate::util::hashids::to_u64 as hashid_to_u64;
+use crate::util::hashids::alias_comparator;
 use crate::util::misc::{decrypt, remove_expired};
 use crate::AppState;
 use askama::Template;
@@ -18,14 +17,11 @@ use actix_web::error::ErrorInternalServerError;
 pub async fn remove(data: web::Data<AppState>, id: web::Path<String>) -> Result<HttpResponse, Error> {
     let mut pastas = data.pastas.lock().unwrap();
 
-    let id = if ARGS.hash_ids {
-        hashid_to_u64(&id).unwrap_or(0)
-    } else {
-        to_u64(&id.into_inner()).unwrap_or(0)
-    };
+    let comparator = alias_comparator(id.as_str());
 
     for (i, pasta) in pastas.iter().enumerate() {
-        if pasta.id == id {
+        if comparator(pasta) {
+            let id = pasta.id;
             // if it's encrypted or read-only, it needs password to be deleted
             if pasta.encrypt_server || pasta.readonly {
                 return Ok(HttpResponse::Found()
@@ -88,11 +84,7 @@ pub async fn post_remove(
     id: web::Path<String>,
     mut payload: Multipart,
 ) -> Result<HttpResponse, Error> {
-    let id = if ARGS.hash_ids {
-        hashid_to_u64(&id).unwrap_or(0)
-    } else {
-        to_u64(&id.into_inner()).unwrap_or(0)
-    };
+    let comparator = alias_comparator(id.as_str());
 
     let mut pastas = data.pastas.lock().unwrap();
 
@@ -109,7 +101,8 @@ pub async fn post_remove(
     }
 
     for (i, pasta) in pastas.iter().enumerate() {
-        if pasta.id == id {
+        if comparator(pasta) {
+            let id = pasta.id;
             if pastas[i].readonly || pastas[i].encrypt_server {
                 if password != *"" {
                     let res = decrypt(pastas[i].content.to_owned().as_str(), &password);
