@@ -42,6 +42,36 @@
                     <option value="1week">
                         {%- endif %} 1 week
                     </option>
+                    {% if args.default_expiry == "2weeks" %}
+                    <option selected value="2weeks">
+                        {%- else %}
+                    <option value="2weeks">
+                        {%- endif %} 2 weeks
+                    </option>
+                    {% if args.default_expiry == "30days" %}
+                    <option selected value="30days">
+                        {%- else %}
+                    <option value="30days">
+                        {%- endif %} 30 days
+                    </option>
+                    {% if args.default_expiry == "60days" %}
+                    <option selected value="60days">
+                        {%- else %}
+                    <option value="60days">
+                        {%- endif %} 60 days
+                    </option>
+                    {% if args.default_expiry == "90days" %}
+                    <option selected value="90days">
+                        {%- else %}
+                    <option value="90days">
+                        {%- endif %} 90 days
+                    </option>
+                    {% if args.default_expiry == "1year" %}
+                    <option selected value="1year">
+                        {%- else %}
+                    <option value="1year">
+                        {%- endif %} 1 year
+                    </option>
                 </optgroup>
                 {% if args.eternal_pasta %} {% if args.default_expiry ==
                 "never" %}
